@@ -8,6 +8,7 @@
         "README.md",
         "main.py",
         "hidrometer.py",
+        "artesian_well.py",
         "watertank_level.py"
       ]
     },

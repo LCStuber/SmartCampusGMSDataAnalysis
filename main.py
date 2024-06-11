@@ -1,20 +1,35 @@
 import streamlit as st
-import subprocess
+import hidrometer
+import watertank_level
+import artesian_well
 
-# Define the function to run the script
-def run_script(script_name):
-    result = subprocess.run(["python", script_name], capture_output=True, text=True)
-    return result.stdout, result.stderr
+# Mapeamento entre nomes amigáveis e funções dos scripts
+script_mapping = {
+    "Hidrômetro": hidrometer.main,
+    "Nível do Tanque de Água": watertank_level.main,
+    "Poço Artesiano": artesian_well.main
+}
 
 # Streamlit UI
-st.title("Run Python Script")
+st.title("Análise de Dados dos Sensores")
 
-script_selected = st.selectbox("Select a script to run", ["script1.py", "script2.py", "script3.py"])
+# Seleção do script com nomes amigáveis
+script_selected = st.selectbox("Selecione um sensor para visualizar o panorama", list(script_mapping.keys()))
 
-if st.button(f"Run {script_selected}"):
-    st.write(f"Running {script_selected}...")
-    stdout, stderr = run_script(script_selected)
-    if stdout:
-        st.write("Output:\n", stdout)
-    if stderr:
-        st.write("Errors:\n", stderr)
+if st.button(f"Visualizar {script_selected}"):
+    script_func = script_mapping[script_selected]
+    st.write(f"Visualizando {script_selected}...")
+    try:
+        # Redireciona a saída padrão para capturar o output
+        from io import StringIO
+        import sys
+
+        old_stdout = sys.stdout
+        sys.stdout = mystdout = StringIO()
+
+        script_func()
+
+        sys.stdout = old_stdout
+        st.write(mystdout.getvalue())
+    except Exception as e:
+        st.write("Errors:\n", str(e))
