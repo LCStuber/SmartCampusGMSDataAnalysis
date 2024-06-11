@@ -62,15 +62,19 @@ def main():
     axes = axes.flatten()
     for ax, id in zip(axes,ids):
         df_hidrometer_id = dfs_hidrometer_per_node[id]
-        sns.regplot(ax=ax, x="data_boardVoltage", y="Volume", data=df_hidrometer_id, label=id, color=colors.pop(0))
+        sns.regplot(ax=ax, x="data_boardVoltage", y="data_counter", data=df_hidrometer_id, label=id, color=colors.pop(0))
         ax.set_xlabel("Voltagem da placa (V)")
-        ax.set_ylabel("Vazao (L/s)")
+        ax.set_ylabel("Litragem (L)")
         ax.set_title("Litragem do hidrometro x Voltagem da placa") 
         ax.legend(loc='upper left')
         ax.xaxis.set_major_locator(mdates.AutoDateLocator())
         ax.xaxis.set_major_formatter(mdates.DateFormatter('%H:%M:%S'))
         ax.grid(True)
     st.pyplot(plt.gcf())
+
+    for id in ids:
+        corr_variable = dfs_hidrometer_per_node[id][["data_boardVoltage", "data_counter"]].corr()
+        st.write(f"Correlação entre Voltagem da placa e Litragem para o Device ID {id}: {corr_variable.iloc[0,1]}")
 
 if __name__ == "__main__":
     main()

@@ -111,6 +111,10 @@ def main():
         ax.grid(True)
     st.pyplot(plt.gcf())
 
+    for id in ids:
+        corr_variable = dfs_water_tank_per_node[id][["data_boardVoltage", "Volume"]].corr()
+        st.write(f"Correlação entre Voltagem da placa e Volume para o Device ID {id}: {corr_variable.iloc[0,1]}")
+
 
 
 if __name__ == "__main__":
