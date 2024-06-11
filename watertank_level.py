@@ -12,6 +12,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 from statsmodels.formula.api import ols
+import streamlit as st
 
 
 # In[17]:
@@ -103,7 +104,7 @@ for ax, id in zip(axes,ids):
     ax.xaxis.set_major_locator(mdates.AutoDateLocator())
     ax.xaxis.set_major_formatter(mdates.DateFormatter('%H:%M:%S'))
     ax.grid(True)
-plt.show()
+st.pyplot(plt.gcf())
 
 
 # In[23]:
@@ -126,7 +127,7 @@ for ax, id in zip(axes,ids):
     ax.xaxis.set_major_locator(mdates.AutoDateLocator())
     ax.xaxis.set_major_formatter(mdates.DateFormatter('%H:%M:%S'))
     ax.grid(True)
-plt.show()
+st.pyplot(plt.gcf())
 
 
 # In[24]:
@@ -149,7 +150,7 @@ for ax, id in zip(axes,ids):
     ax.xaxis.set_major_locator(mdates.AutoDateLocator())
     ax.xaxis.set_major_formatter(mdates.DateFormatter('%H:%M:%S'))
     ax.grid(True)
-plt.show()
+st.pyplot(plt.gcf())
 
 
 # In[32]:
