@@ -116,9 +116,13 @@ def main():
         ax.grid(True)
     st.pyplot(plt.gcf())
 
+    lista_correlacoes = []
     for id in ids:
         corr_variable = dfs_water_tank_per_node[id][["data_boardVoltage", "Volume"]].corr()
-        st.write(f"Correlação entre Voltagem da placa e Volume para o Device ID {id}: {corr_variable.iloc[0,1]}")
+        lista_correlacoes.append(corr_variable.iloc[0,1])
+    
+    st.write("Valor de Correlação entre Voltagem da placa e Volume para cada tanque de água")
+    st.table(pd.DataFrame(lista_correlacoes, columns=["Correlação"], index=ids))
 
 
 
