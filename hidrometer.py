@@ -45,8 +45,6 @@ def main():
         ax.grid(True)
     st.pyplot(plt.gcf())
 
-
-
     data_volume = []
     print("Intervalo de tempo total: {:.2f}".format((df_hidrometer["time"].max() - df_hidrometer["time"].min()).total_seconds()/60))
     for id in ids:
@@ -56,6 +54,23 @@ def main():
         data_volume.append([id, max_volume, min_volume])
 
     df_estatisticas = pd.DataFrame(data_volume, columns=["Device ID", "Max Volume", "Min Volume"])
-    df_estatisticas
+    st.table(df_estatisticas)
+
+    colors = sns.color_palette("husl", len(ids))
+
+    fig, axes = plt.subplots(ncols=ncols, nrows=nrows, figsize=(20, nrows*5))
+    axes = axes.flatten()
+    for ax, id in zip(axes,ids):
+        df_hidrometer_id = dfs_hidrometer_per_node[id]
+        sns.regplot(ax=ax, x="data_boardVoltage", y="Volume", data=df_hidrometer_id, label=id, color=colors.pop(0))
+        ax.set_xlabel("Voltagem da placa (V)")
+        ax.set_ylabel("Vazao (L/s)")
+        ax.set_title("Litragem do hidrometro x Voltagem da placa") 
+        ax.legend(loc='upper left')
+        ax.xaxis.set_major_locator(mdates.AutoDateLocator())
+        ax.xaxis.set_major_formatter(mdates.DateFormatter('%H:%M:%S'))
+        ax.grid(True)
+    st.pyplot(plt.gcf())
+
 if __name__ == "__main__":
     main()

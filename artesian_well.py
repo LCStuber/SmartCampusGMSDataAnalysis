@@ -22,8 +22,8 @@ def main():
     df_artesian_well["time"] = pd.to_datetime(df_artesian_well["time"])
     df_artesian_well["pressure_difference"] = df_artesian_well["data_pressure_1"] - df_artesian_well["data_pressure_0"]
 
-    print("Diferença de pressão média: ", df_artesian_well["pressure_difference"].mean())
-    print("Diferença de pressão desvio padrão: ", df_artesian_well["pressure_difference"].std())
+    st.write("Diferença de pressão média: ", df_artesian_well["pressure_difference"].mean())
+    st.write("Diferença de pressão desvio padrão: ", df_artesian_well["pressure_difference"].std())
 
 
     sns.lineplot(data=df_artesian_well, x="time", y="pressure_difference", color="red")
@@ -34,6 +34,16 @@ def main():
     plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%H:%M:%S'))
     plt.grid()
     st.pyplot(plt.gcf())
+
+    sns.regplot(data=df_artesian_well, x="data_boardVoltage", y="pressure_difference")
+    plt.xlabel("Voltagem da placa (V)")
+    plt.ylabel("Diferença de pressão")
+    plt.title("Diferença de pressão em relação à tensão da placa")
+    plt.grid()
+    st.pyplot(plt.gcf())
+
+    corr = df_artesian_well[['pressure_difference', 'data_boardVoltage']].corr()
+    st.write("Correlação entre volume e tensão da placa: ", corr.values[0][1])
 
 if __name__ == "__main__":
     main()
