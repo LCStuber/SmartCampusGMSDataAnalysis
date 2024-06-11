@@ -26,6 +26,7 @@ def main():
     st.write("Diferença de pressão desvio padrão: ", df_artesian_well["pressure_difference"].std())
 
 
+    st.title("Análise da diferença de pressão no poço artesiano")
     sns.lineplot(data=df_artesian_well, x="time", y="pressure_difference", color="red")
     plt.xlabel("Tempo")
     plt.ylabel("Diferença de pressão")
@@ -35,6 +36,7 @@ def main():
     plt.grid()
     st.pyplot(plt.gcf())
 
+    st.title("Análise da diferença de pressão em relação à tensão da placa")
     sns.regplot(data=df_artesian_well, x="data_boardVoltage", y="pressure_difference")
     plt.xlabel("Voltagem da placa (V)")
     plt.ylabel("Diferença de pressão")

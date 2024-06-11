@@ -31,6 +31,7 @@ def main():
     ncols = 3
     nrows = (len(ids) + ncols - 1) // ncols
 
+    st.title("Análise da quantidade de água no hidrometro")
     fig, axes = plt.subplots(ncols=ncols, nrows=nrows, figsize=(20, nrows*5))
     axes = axes.flatten()
     for ax, id in zip(axes,ids):
@@ -45,6 +46,7 @@ def main():
         ax.grid(True)
     st.pyplot(plt.gcf())
 
+    st.title("Estatísticas da quantidade de água no hidrometro")
     data_volume = []
     print("Intervalo de tempo total: {:.2f}".format((df_hidrometer["time"].max() - df_hidrometer["time"].min()).total_seconds()/60))
     for id in ids:
@@ -58,6 +60,7 @@ def main():
 
     colors = sns.color_palette("husl", len(ids))
 
+    st.title("Correlação entre Voltagem da placa e Litragem para cada hidrometro")
     fig, axes = plt.subplots(ncols=ncols, nrows=nrows, figsize=(20, nrows*5))
     axes = axes.flatten()
     for ax, id in zip(axes,ids):

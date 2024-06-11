@@ -33,6 +33,7 @@ def main():
         dfs_water_tank_per_node[id]["time_diff"] = dfs_water_tank_per_node[id]["time"].diff().dt.seconds
         dfs_water_tank_per_node[id]["Vazao"] = dfs_water_tank_per_node[id]["Volume"].diff() / dfs_water_tank_per_node[id]["time_diff"]
 
+    st.title("Estatistica sobre o volume no tanque de água")
     data_volume = []
     for id in ids:
         max_volume = dfs_water_tank_per_node[id]["Volume"].max()
@@ -45,6 +46,7 @@ def main():
     df_estatisticas = pd.DataFrame(data_volume, columns=["Device ID", "Max Volume", "Min Volume", "Mean Volume", "Std Volume"])
     st.table(df_estatisticas)
 
+    st.title("Estatistica sobre a vazão no tanque de água")
     data_vazao = []
     for id in ids:
         max_vazao = dfs_water_tank_per_node[id]["Vazao"].max()
@@ -62,6 +64,7 @@ def main():
     ncols = 3
     nrows = (len(ids) + ncols - 1) // ncols
 
+    st.title("Análise do volume no tanque de água")
     fig, axes = plt.subplots(ncols=ncols, nrows=nrows, figsize=(20, nrows*5))
     axes = axes.flatten()
     for ax, id in zip(axes,ids):
@@ -81,6 +84,7 @@ def main():
     ncols = 3
     nrows = (len(ids) + ncols - 1) // ncols
 
+    st.title("Análise da vazão no tanque de água")
     fig, axes = plt.subplots(ncols=ncols, nrows=nrows, figsize=(20, nrows*5))
     axes = axes.flatten()
     for ax, id in zip(axes,ids):
@@ -97,6 +101,7 @@ def main():
 
     colors = sns.color_palette("husl", len(ids))
 
+    st.title("Correlação entre Voltagem da placa e Volume para cada tanque de água")
     fig, axes = plt.subplots(ncols=ncols, nrows=nrows, figsize=(20, nrows*5))
     axes = axes.flatten()
     for ax, id in zip(axes,ids):
