@@ -1,14 +1,12 @@
+import pandas as pd
+import seaborn as sns
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
+from statsmodels.formula.api import ols
+import streamlit as st
 
 def main():
-
-    import pandas as pd
-    import seaborn as sns
-    import numpy as np
-    import matplotlib.pyplot as plt
-    import matplotlib.dates as mdates
-    from statsmodels.formula.api import ols
-    import streamlit as st
-
     data_fields = [
         "applicationID", "applicationName", "data_boardVoltage", "data_distance", 
         "devEUI", "fCnt", "fPort", "host", "nodeName", "rxInfo_altitude_0", 
@@ -33,7 +31,7 @@ def main():
         dfs_water_tank_per_node[id]["time_diff"] = dfs_water_tank_per_node[id]["time"].diff().dt.seconds
         dfs_water_tank_per_node[id]["Vazao"] = dfs_water_tank_per_node[id]["Volume"].diff() / dfs_water_tank_per_node[id]["time_diff"]
 
-    st.title("Estatistica sobre o volume no tanque de água")
+    st.title("Estatística sobre o volume no tanque de água")
     data_volume = []
     for id in ids:
         max_volume = dfs_water_tank_per_node[id]["Volume"].max()
@@ -46,7 +44,7 @@ def main():
     df_estatisticas = pd.DataFrame(data_volume, columns=["Device ID", "Max Volume", "Min Volume", "Mean Volume", "Std Volume"])
     st.table(df_estatisticas)
 
-    st.title("Estatistica sobre a vazão no tanque de água")
+    st.title("Estatística sobre a vazão no tanque de água")
     data_vazao = []
     for id in ids:
         max_vazao = dfs_water_tank_per_node[id]["Vazao"].max()
@@ -67,7 +65,7 @@ def main():
     st.title("Análise do volume no tanque de água")
     fig, axes = plt.subplots(ncols=ncols, nrows=nrows, figsize=(20, nrows*5))
     axes = axes.flatten()
-    for ax, id in zip(axes,ids):
+    for ax, id in zip(axes, ids):
         df_water_tank_id = dfs_water_tank_per_node[id]
         sns.lineplot(ax=ax, x="time", y="Volume", data=df_water_tank_id, label=id, color=colors.pop(0))
         ax.set_xlabel("Tempo (h)")
@@ -81,13 +79,10 @@ def main():
 
     colors = sns.color_palette("husl", len(ids))
 
-    ncols = 3
-    nrows = (len(ids) + ncols - 1) // ncols
-
     st.title("Análise da vazão no tanque de água")
     fig, axes = plt.subplots(ncols=ncols, nrows=nrows, figsize=(20, nrows*5))
     axes = axes.flatten()
-    for ax, id in zip(axes,ids):
+    for ax, id in zip(axes, ids):
         df_water_tank_id = dfs_water_tank_per_node[id]
         sns.lineplot(ax=ax, x="time", y="Vazao", data=df_water_tank_id, label=id, color=colors.pop(0))
         ax.set_xlabel("Tempo (h)")
@@ -101,30 +96,34 @@ def main():
 
     colors = sns.color_palette("husl", len(ids))
 
-    st.title("Correlação entre Voltagem da placa e Volume para cada tanque de água")
+    st.title("Voltagem da placa ao longo do tempo")
     fig, axes = plt.subplots(ncols=ncols, nrows=nrows, figsize=(20, nrows*5))
     axes = axes.flatten()
-    for ax, id in zip(axes,ids):
+    for ax, id in zip(axes, ids):
         df_water_tank_id = dfs_water_tank_per_node[id]
-        sns.regplot(ax=ax, x="data_boardVoltage", y="Volume", data=df_water_tank_id, label=id, color=colors.pop(0))
-        ax.set_xlabel("Voltagem da placa (V)")
-        ax.set_ylabel("Volume (L)")
-        ax.set_title("Volume do tanque de água x Voltagem da placa") 
+        sns.lineplot(ax=ax, x="time", y="data_boardVoltage", data=df_water_tank_id, label=id, color=colors.pop(0))
+        ax.set_ylabel("Voltagem da placa (V)")
+        ax.set_xlabel("Tempo (m)")
+        ax.set_title("Voltagem da placa x Tempo") 
         ax.legend(loc='upper left')
         ax.xaxis.set_major_locator(mdates.AutoDateLocator())
         ax.xaxis.set_major_formatter(mdates.DateFormatter('%H:%M:%S'))
         ax.grid(True)
     st.pyplot(plt.gcf())
 
-    lista_correlacoes = []
+    st.title("Última Voltagem para cada Device")
+    lista_voltagem = []
     for id in ids:
-        corr_variable = dfs_water_tank_per_node[id][["data_boardVoltage", "Volume"]].corr()
-        lista_correlacoes.append(corr_variable.iloc[0,1])
-    
-    st.write("Valor de Correlação entre Voltagem da placa e Volume para cada tanque de água")
-    st.table(pd.DataFrame(lista_correlacoes, columns=["Correlação"], index=ids))
+        ultima_voltagem = dfs_water_tank_per_node[id]["data_boardVoltage"].iloc[-1]
+        lista_voltagem.append([id, ultima_voltagem])
 
+    df_voltagem = pd.DataFrame(lista_voltagem, columns=["Device ID", "Última Voltagem"])
+    def color_voltagem(val):
+        color = 'red' if val < 2 else 'white'
+        return f'color: {color}'
 
+    styled_df = df_voltagem.style.map(color_voltagem, subset=['Última Voltagem'])
+    st.dataframe(styled_df)
 
 if __name__ == "__main__":
     main()
