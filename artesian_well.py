@@ -38,9 +38,9 @@ def main():
 
     st.title("Análise da diferença de pressão em relação à tensão da placa")
     fig,axes = plt.subplots()
-    sns.regplot(data=df_artesian_well, x="pressure_difference", y="data_boardVoltage", ax=axes, color="blue")
-    axes.set_xlabel("Diferença de pressão")
-    axes.set_ylabel("Tensão da placa")
+    sns.regplot(data=df_artesian_well, x="data_boardVoltage", y="pressure_difference", ax=axes, color="blue")
+    axes.set_xlabel("Tensão da placa")
+    axes.set_ylabel("Diferença de pressão")
     axes.set_title("Diferença de pressão em relação à tensão da placa")
     axes.grid()
     st.pyplot(plt.gcf())
