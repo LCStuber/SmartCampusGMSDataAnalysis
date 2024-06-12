@@ -60,24 +60,34 @@ def main():
 
     colors = sns.color_palette("husl", len(ids))
 
-    st.title("Correlação entre Voltagem da placa e Litragem para cada hidrometro")
+    st.title("Voltagem da placa ao longo do tempo")
     fig, axes = plt.subplots(ncols=ncols, nrows=nrows, figsize=(20, nrows*5))
     axes = axes.flatten()
-    for ax, id in zip(axes,ids):
+    for ax, id in zip(axes, ids):
         df_hidrometer_id = dfs_hidrometer_per_node[id]
-        sns.regplot(ax=ax, x="data_boardVoltage", y="data_counter", data=df_hidrometer_id, label=id, color=colors.pop(0))
-        ax.set_xlabel("Voltagem da placa (V)")
-        ax.set_ylabel("Litragem (L)")
-        ax.set_title("Litragem do hidrometro x Voltagem da placa") 
+        sns.lineplot(ax=ax, x="time", y="data_boardVoltage", data=df_hidrometer_id, label=id, color=colors.pop(0))
+        ax.set_ylabel("Voltagem da placa (V)")
+        ax.set_xlabel("Tempo (m)")
+        ax.set_title("Voltagem da placa x Tempo") 
         ax.legend(loc='upper left')
         ax.xaxis.set_major_locator(mdates.AutoDateLocator())
         ax.xaxis.set_major_formatter(mdates.DateFormatter('%H:%M:%S'))
         ax.grid(True)
     st.pyplot(plt.gcf())
 
+    st.title("Última Voltagem para cada Device")
+    lista_voltagem = []
     for id in ids:
-        corr_variable = dfs_hidrometer_per_node[id][["data_boardVoltage", "data_counter"]].corr()
-        st.write(f"Correlação entre Voltagem da placa e Litragem para o Device ID {id}: {corr_variable.iloc[0,1]}")
+        ultima_voltagem = dfs_hidrometer_per_node[id]["data_boardVoltage"].iloc[-1]
+        lista_voltagem.append([id, ultima_voltagem])
+
+    df_voltagem = pd.DataFrame(lista_voltagem, columns=["Device ID", "Última Voltagem"])
+    def color_voltagem(val):
+        color = 'red' if val < 2 else 'white'
+        return f'color: {color}'
+
+    styled_df = df_voltagem.style.map(color_voltagem, subset=['Última Voltagem'])
+    st.dataframe(styled_df)
 
 if __name__ == "__main__":
     main()
