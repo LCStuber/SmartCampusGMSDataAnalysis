@@ -48,5 +48,27 @@ def main():
     corr = df_artesian_well[['pressure_difference', 'data_boardVoltage']].corr()
     st.write("Correlação entre volume e tensão da placa: ", corr.values[0][1])
 
+
+    st.title("Voltagem da placa ao longo do tempo")
+    fig, axes = plt.subplots()
+    sns.lineplot(ax=axes, x="time", y="data_boardVoltage", data=df_artesian_well, label=df_artesian_well["devEUI"].iloc[-1], color="blue")
+    axes.set_ylabel("Voltagem da placa (V)")
+    axes.set_xlabel("Tempo (m)")
+    axes.set_title("Voltagem da placa x Tempo") 
+    axes.legend(loc='upper left')
+    axes.xaxis.set_major_locator(mdates.AutoDateLocator())
+    axes.xaxis.set_major_formatter(mdates.DateFormatter('%H:%M:%S'))
+    axes.grid(True)
+    st.pyplot(plt.gcf())
+
+    st.title("Última Voltagem para o dispositivo")
+    lista_voltagem = []
+    ultima_voltagem = df_artesian_well["data_boardVoltage"].iloc[-1]
+    lista_voltagem.append([df_artesian_well["devEUI"].iloc[-1], ultima_voltagem])
+
+    df_voltagem = pd.DataFrame(lista_voltagem, columns=["Device ID", "Última Voltagem"])
+
+    st.dataframe(df_voltagem)
+
 if __name__ == "__main__":
     main()
