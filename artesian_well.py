@@ -34,7 +34,7 @@ def main():
     plt.gca().xaxis.set_major_locator(mdates.AutoDateLocator())
     plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%H:%M:%S'))
     plt.grid()
-    st.pyplot(plt.gcf())
+    st.pyplot(plt.gcf())    
 
     st.title("Análise da diferença de pressão em relação à tensão da placa")
     sns.regplot(data=df_artesian_well, x="data_boardVoltage", y="pressure_difference")
@@ -42,7 +42,7 @@ def main():
     plt.ylabel("Diferença de pressão")
     plt.title("Diferença de pressão em relação à tensão da placa")
     plt.grid()
-    st.pyplot(plt.gcf())
+    st.pyplot(plt.gcf(1))
 
     corr = df_artesian_well[['pressure_difference', 'data_boardVoltage']].corr()
     st.write("Correlação entre volume e tensão da placa: ", corr.values[0][1])
