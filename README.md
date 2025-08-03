@@ -2,9 +2,6 @@
 
 Welcome to the Sensors Data Analysis project by GMS (Gerência de Manutenção e Serviços)! This project aims to provide insightful analysis of sensor data collected from various sources.
 
-## Access our analysis through [Streamlit](https://analytics-smartcampus.streamlit.app/)
-
-To explore our analysis, simply visit our Streamlit app using the link above. Through the app, you can interact with different visualizations and insights derived from the sensor data.
 
 ### Features
 
